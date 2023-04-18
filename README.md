@@ -4,6 +4,7 @@
 - [Creating a Celo Payment Gateway](#creating-a-celo-payment-gateway)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
+  - [Prerequisites](#prerequisites)
   - [Requirements](#requirements)
   - [1. Create a Celo Node](#1-create-a-celo-node)
   - [2. Create a Smart Contract](#2-create-a-smart-contract)
@@ -22,15 +23,21 @@
 
 ## Introduction
 
-We will create a Celo payment gateway using React, TypeScript, and the Celo SDK in this tutorial. Merchants will be able to take payments in Celo Stablecoins through the payment gateway, which will provide a secure and transparent payment mechanism. The Celo ContractKit library will be used to communicate with the Celo blockchain, and the React framework will be used to create the user interface.
+We will create a Celo payment gateway using React, TypeScript, and the Celo SDK in this tutorial. Merchants will be able to take payments in Celo stablecoins through the payment gateway, which will provide a secure and transparent payment mechanism. The Celo ContractKit library will be used to communicate with the Celo blockchain, and the React framework will be used to create the user interface (UI).
+
+## Prerequisites
+
+You will need to have a basic understanding of the following to follow this tutorial:
+- Knowledge of TypeScript and React.
+- Knowledge of Solidity.
+- Knowledge of smart contracts and blockchain principles.
 
 ## Requirements
 
 You will need the following to complete this tutorial: 
 
-- Knowledge of TypeScript and React.
-- Node.js v16 and above installed
-- npm installed 
+- [Node.js v16](https://nodejs.org/en) and above installed
+- Npm installed 
 - To test the payment gateway, create a Celo account and deposit some Celo stable coins.
 
 ## 1. Create a Celo Node
