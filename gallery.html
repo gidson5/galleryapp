@@ -1,39 +1,44 @@
+<!-- This is the HTML code for a gallery application that displays images when clicked -->
 <html>
     <head>
+        <!-- The title of the webpage -->
         <title>GALLERY APPLICATION</title>
+        <!-- Link to the Bootstrap CSS file -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
     </head>
     <body>
 
-        <div class="container">
+        <!-- A container to hold the images -->
+        <div className="container">
+            <!-- Images to be clicked to display in the center -->
             <center>
-                <span><img  onClick="displayImage(this)" src="images/3.jpg"class="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
-                <span><img  onClick="displayImage(this)" src="images/4.jpg"class="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
-                <span><img  onClick="displayImage(this)" src="images/5.jpg"class="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
-                <span><img  onClick="displayImage(this)" src="images/benz.jpg"class="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
-                <span><img  onClick="displayImage(this)" src="images/ferrari.jpg"class="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
+                <span><img  onClick={displayImage(this)} src="images/3.jpg" className="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
+                <span><img  onClick={displayImage(this)} src="images/4.jpg" className="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
+                <span><img  onClick={displayImage(this)} src="images/5.jpg" className="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
+                <span><img  onClick={displayImage(this)} src="images/benz.jpg" className="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
+                <span><img  onClick={displayImage(this)} src="images/ferrari.jpg" className="img-thumbnail rounded-circle img-fluid" width="214px" height="120px"></span>
             </center>
             
         </div>
-        <hr>
+        <!-- A horizontal line to separate the images and the center image -->
+        <hr />
         <center>
-            <img src=""  id="display" class="rounded" width="1100px" height="720px">
+            <!-- The center image that displays when clicked -->
+            <img src=""  id="display" className="rounded" width="1100px" height="720px" />
         </center>
 
         <script type="text/javascript">
             //a function to display the clicked image
             function displayImage(image ){
                 document.getElementById('display').src = image.src;
-
-
             }
         </script>
         
         <!-- jQuery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-        <!-- Latest compiled JavaScript -->
+        <!-- Latest compiled JavaScript for Bootstrap -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </body>
 </html>
