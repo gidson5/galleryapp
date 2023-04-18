@@ -1,70 +1,101 @@
-# Creating a celo payment gateway.
+# Creating a Celo Payment Gateway-
 
-## Introduction
+## Introduction:
 
-We will create a Celo payment gateway using React, TypeScript, and the Celo SDK in this tutorial. Merchants will be able to take payments in Celo Stablecoins through the payment gateway, which will provide a secure and transparent payment mechanism. The Celo ContractKit library will be used to communicate with the Celo blockchain, and the React framework will be used to create the user interface.
+We are going to create a Celo payment gateway using React, TypeScript, and the Celo SDK in this tutorial. Users will be able to take payments in Celo Stablecoins through the payment gateway, which will provide a secure and transparent payment mechanism. The Celo ContractKit library will be used to communicate with the Celo blockchain, and the React framework will be used to create the user interface.
 
 ## Requirements:
 
 You will need the following to complete this tutorial: 
 
-- Knowledge of TypeScript and React.
-- Node.js v16 and above installed
-- npm installed 
-- To test the payment gateway, create a Celo account and deposit some Celo stable coins.
+- Knowledge of [TypeScript](https://www.typescriptlang.org/download) and [React](https://react-cn.github.io/react/downloads.html).
+- Install [Node.js](https://nodejs.org/en/download) (v16 and above)
+- Install [npm](https://www.npmjs.com/package/download)  
+- Creation of Celo account for testing the payment gateway & depositing Celo stable coins.
 
 ## 1. Create a Celo Node:
 
-Setting up a Celo node on your server is the first step in creating a Celo payment gateway. To set it up we first need to install the Celo Cli and this can be installed through the following code:
+First step is to set up a Celo node on your server to create a Celo payment gateway. To set it up we first, need to install the Celo Cli and this can be installed through the following code:
 
+```
 ` npm install -g celocli `
+```
 
 After installing the Celo CLI, run the following command to start your Celo node:
 
+```
 `celocli init`
+```
 
 To configure your Celo node, according to the instructions. Your account address, password, and other information will be requested.
 
 ## 2. Create a smart contract:
 
-The creation of a smart contract to control the payment gateway is the next step. Solidity, a programming language created expressly for creating smart contracts on the Ethereum network, is used to create the smart contract.
+The next step is creation of the Smart Contract is to control the payment gateway. Solidity, a programming language that is used for creating Smart Contracts on the Ethereum network.
 
 For your project, create a new directory and then create a file called PaymentGateway.sol with the following code:
 
 ```solidity
+// Set the Solidity compiler version to 0.8.0 or later
 pragma solidity ^0.8.0;
 
+// Import the Address library from the Celo ContractKit
 import "@celo/contractkit/contracts/utils/Address.sol";
 
+// Define the PaymentGateway contract
 contract PaymentGateway {
+    // Use the Address library for address payable
     using Address for address payable;
 
+    // Declare a public owner variable of type address
     address public owner;
+
+    // Declare a mapping to store balances for each address
     mapping(address => uint256) public balances;
 
+    // Define the constructor function, which sets the contract owner to the address that deployed the contract
     constructor() {
         owner = msg.sender;
     }
 
+    // Define the pay function, which receives and adds funds to the sender's balance
     function pay() public payable {
         balances[msg.sender] += msg.value;
     }
 
+    // Define the withdraw function, which withdraws funds from the sender's balance and sends them to the sender's address
     function withdraw(uint256 amount) public {
+        // Require that the sender has enough balance to withdraw the specified amount
         require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        // Subtract the withdrawn amount from the sender's balance
         balances[msg.sender] -= amount;
-        payable(msg.sender).sendValue(amount);
+
+        // Transfer the withdrawn amount to the sender's address
+        payable(msg.sender).transfer(amount);
     }
+
+    // Define the receive function, which is called when the contract receives funds without a function call
+    receive() external payable {}
+
+    // Define the fallback function, which is called when the contract receives a function call that does not exist
+    fallback() external payable {}
+
+    // Define events to track fund deposits and withdrawals
+    event FundsDeposited(address indexed account, uint256 amount);
+    event FundsWithdrawn(address indexed account, uint256 amount);
 }
+
 ```
 
-The pay feature of this smart contract updates the user's balance on the Celo blockchain and takes payments in Celo Stablecoins. Additionally, it offers a withdraw feature that enables customers to get their remaining amounts.
+The pay feature of this Smart Contract updates the user's balance on the Celo blockchain and takes payments in Celo Stablecoins. Additionally, it offers a withdraw feature that enables customers to get their remaining amounts.
 
 ## 3. Deploy the smart contract:
 
-Once the smart contract has been created, it must be deployed to the Celo network using the Celo CLI. In this step, the smart contract code is compiled, the ABI (Application Binary Interface) is produced, and the contract is deployed to the Celo blockchain.
+Once the smart contract has been created, it must be deployed to the Celo network using the Celo CLI. In this step, the Smart Contract code is compiled, the ABI (Application Binary Interface) is produced, and the contract is deployed to the Celo blockchain.
 
 Run the next command to construct the smart contract:
+
 `celocli compile PaymentGateway.sol`
 
 By doing this, the ABI and bytecode for the smart contract will be generated.
@@ -75,7 +106,7 @@ Run the following command to deploy the smart contract on the Celo blockchain.
 
 ## 4. Integrating the Celo SDK:
 
-We must communicate with our smart contract from our React application now that it has been launched. The Celo SDK comes in help in this situation. We are given a collection of JavaScript libraries by the Celo SDK that we can use in our application to communicate with the Celo blockchain.
+We must communicate with our Smart Contract from our React application now that it has been launched. The Celo SDK comes in help with this situation. We are given a collection of JavaScript libraries by the Celo SDK that we can use in our application to communicate with the Celo blockchain.
 
 Installing the necessary prerequisites for the Celo SDK is the first step.
 
@@ -99,23 +130,27 @@ The user's address will be displayed in our user interface using the accounts co
 The user will click the "Pay" button in our user interface, therefore we'll next construct a new function called sendPayment that will start a payment transaction when they do. The recipient's address and the money to be sent are the two inputs for the function.
 
 ```javascript
+// Define an asynchronous function called sendPayment that takes in two parameters: recipientAddress and amount
 const sendPayment = async (recipientAddress: string, amount: string) => {
   try {
-    // Get the contract instance
+    // Get the instance of the stable token contract from the contractKit object
     const stableToken = await contractKit.contracts.getStableToken();
 
-    // Send the payment
+    // Transfer the specified amount to the recipient address using the stableToken instance
+    // The transfer function returns a transaction object that represents the transfer
     const txObject = await stableToken.transfer(recipientAddress, amount).send({ from: accounts[0] });
     
-    // Wait for the transaction to be mined
+    // Wait for the transaction to be mined and get the receipt
     const txReceipt = await txObject.waitReceipt();
 
-    // Display the transaction hash
+    // Log the transaction hash to the console
     console.log(`Transaction hash: ${txReceipt.transactionHash}`);
   } catch (error) {
+    // If an error occurs during the execution of the function, log the error to the console
     console.log(error);
   }
 }
+
 ```
 
 Using the ContractKit object, we first obtain an instance of the StableToken contract in this function. Then, we start a payment transaction with the specified amount to the recipient's address using the transfer function. The from argument is set to the user's account address.
@@ -129,25 +164,33 @@ We can begin creating our user interface now that our smart contract has been la
 First, we'll make a brand-new file called PaymentForm.tsx in the src/components directory. We'll define a functional component that renders a form for the user to enter the recipient's address and other information in this file.
 
 ```react
+// Import the React and useState modules from the 'react' package
 import React, { useState } from 'react';
 
+// Define a Props interface that describes the props for the PaymentForm component
 interface Props {
-  sendPayment: (recipientAddress: string, amount: string) => Promise<void>;
+  sendPayment: (recipientAddress: string, amount: string) => Promise<void>; // A function that sends a payment to a recipient address with a specified amount
 }
 
+// Define a functional component called PaymentForm that takes in the sendPayment function as a prop
 const PaymentForm: React.FC<Props> = ({ sendPayment }) => {
+  // Declare two state variables using the useState hook: recipientAddress and amount
   const [recipientAddress, setRecipientAddress] = useState('');
   const [amount, setAmount] = useState('');
 
+  // Define a handleSubmit function that is called when the form is submitted
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault(); // Prevent the default form submission behavior
 
+    // Call the sendPayment function with the recipientAddress and amount state variables as arguments
     await sendPayment(recipientAddress, amount);
 
+    // Clear the recipientAddress and amount state variables
     setRecipientAddress('');
     setAmount('');
   }
 
+  // Render a form element with two input fields for recipientAddress and amount, and a submit button
   return (
     <form onSubmit={handleSubmit}>
       <label>
@@ -156,7 +199,12 @@ const PaymentForm: React.FC<Props> = ({ sendPayment }) => {
       </label>
       <label>
         Amount:
-        <input type="text" value={amount} onChange={()}
+        <input type="text" value={amount} onChange={(event) => setAmount(event.target.value)} />
+      </label>
+      <button type="submit">Send Payment</button>
+    </form>
+  );
+}
 
 ```
 
@@ -424,16 +472,21 @@ Users can enter the amount they wish to pay using the PaymentForm component, whi
 The App component will then be updated to render the PaymentForm component. App.tsx's content should be replaced with the following code:
 
 ```javascipt
+// Import React and PaymentForm component
 import React from 'react';
 import { PaymentForm } from './components/PaymentForm';
 
+// Define App component as a function component that returns a div containing a PaymentForm
 const App: React.FC = () => {
+  // Define a recipient address for the payment
   const recipient = '0x0000000000000000000000000000000000000000';
 
+  // Define a callback function to be called when the payment is successful
   const handlePaymentSuccess = () => {
     alert('Payment successful!');
   };
 
+  // Render the App component with a header and a PaymentForm component
   return (
     <div>
       <h1>Celo Payment Gateway</h1>
@@ -571,7 +624,6 @@ const PaymentConfirmation: NextPage = () => {
 
 export default PaymentConfirmation;
 ```
-
 The useRouter hook from Next.js is used in this file to retrieve the query parameters from the URL. From the query parameters, we take the amount, currency, recipient address, and transaction hash, and we render these on the page.
 
 ## 13. Testing the payment gateway:
@@ -582,18 +634,16 @@ Click the "Pay with Celo" button after entering the recipient's address, the pay
 
 In the Celo Wallet app, confirm the transaction, then wait for it to be executed. When the transaction is successful, you ought to be taken to the payment confirmation page, where you can view the transaction's specifics.
 
-Congratulations! Utilizing React, TypeScript, and the Celo payment gateway, you are done.
+Congratulations!!! Utilizing React, TypeScript, and the Celo payment gateway, you are done.
 
 ## Conclusion: 
 
-In this tutorial, we learned how to use React, TypeScript, and the Celo SDK to create a Celo payment gateway. The first step was to create a new Next.js project and add the required dependencies. Then, we developed a form that enables users to enter the recipient's address, the payment's amount, and its currency.
+Therefore in this tutorial, we learned how to use React, TypeScript, and the Celo SDK to create a Celo payment gateway. The first step was to create a new Next.js project and add the required dependencies. Then, we developed a form that enables users to enter the recipient's address, the payment's amount, and its currency.
 
-
-After that, we added the Celo SDK to our project and created some code to start a payment transaction with the ContractKit. To give the user feedback during the payment process, we also added a loading spinner and error messages.
+After that, we added the Celo SDK to our project and created some codes to start a payment transaction with the ContractKit. To give the user feedback during the payment process, we also added a loading spinner and error messages.
 
 When the transaction has been properly completed, we finally constructed a payment confirmation page where the user can view the specifics of the transaction.
 
 For businesses and customers, creating a Celo payment gateway offers a safe and open payment system. Additionally, it offers a fantastic chance to learn about decentralized finance, smart contracts, and blockchain development.
 
-We appreciate you following along with this instruction. Coding is fun!
-
+I appreciate you following along with these instructions to make your coding journey fun!!
