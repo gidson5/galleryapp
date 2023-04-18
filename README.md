@@ -1,10 +1,10 @@
-# Creating a celo payment gateway.
+# Creating a Celo Payment Gateway
 
 ## Introduction
 
 We will create a Celo payment gateway using React, TypeScript, and the Celo SDK in this tutorial. Merchants will be able to take payments in Celo Stablecoins through the payment gateway, which will provide a secure and transparent payment mechanism. The Celo ContractKit library will be used to communicate with the Celo blockchain, and the React framework will be used to create the user interface.
 
-## Requirements:
+## Requirements
 
 You will need the following to complete this tutorial: 
 
@@ -13,7 +13,7 @@ You will need the following to complete this tutorial:
 - npm installed 
 - To test the payment gateway, create a Celo account and deposit some Celo stable coins.
 
-## 1. Create a Celo Node:
+## 1. Create a Celo Node
 
 Setting up a Celo node on your server is the first step in creating a Celo payment gateway. To set it up we first need to install the Celo Cli and this can be installed through the following code:
 
@@ -25,7 +25,7 @@ After installing the Celo CLI, run the following command to start your Celo node
 
 To configure your Celo node, according to the instructions. Your account address, password, and other information will be requested.
 
-## 2. Create a smart contract:
+## 2. Create a Smart Contract
 
 The creation of a smart contract to control the payment gateway is the next step. Solidity, a programming language created expressly for creating smart contracts on the Ethereum network, is used to create the smart contract.
 
@@ -60,7 +60,7 @@ contract PaymentGateway {
 
 The pay feature of this smart contract updates the user's balance on the Celo blockchain and takes payments in Celo Stablecoins. Additionally, it offers a withdraw feature that enables customers to get their remaining amounts.
 
-## 3. Deploy the smart contract:
+## 3. Deploy the Smart Contract
 
 Once the smart contract has been created, it must be deployed to the Celo network using the Celo CLI. In this step, the smart contract code is compiled, the ABI (Application Binary Interface) is produced, and the contract is deployed to the Celo blockchain.
 
@@ -73,7 +73,7 @@ Run the following command to deploy the smart contract on the Celo blockchain.
 
 `celocli deploy PaymentGateway --args '[]'`
 
-## 4. Integrating the Celo SDK:
+## 4. Integrating the Celo Sdk
 
 We must communicate with our smart contract from our React application now that it has been launched. The Celo SDK comes in help in this situation. We are given a collection of JavaScript libraries by the Celo SDK that we can use in our application to communicate with the Celo blockchain.
 
@@ -122,7 +122,7 @@ Using the ContractKit object, we first obtain an instance of the StableToken con
 
 The transaction hash is then displayed in the console as we use the waitReceipt function to wait for the transaction to be mined.
 
-## 5. Building the user interface:
+## 5. Building the User Interface
 
 We can begin creating our user interface now that our smart contract has been launched and our integration with the Celo SDK has been set up.
 
@@ -160,7 +160,7 @@ const PaymentForm: React.FC<Props> = ({ sendPayment }) => {
 
 ```
 
-## 6. Build a page that shows the logged-in merchant's payment history: 
+## 6. Build a Page That Shows the Logged-in Merchant’s Payment History
 
 Inside the src/pages directory, make a new file called PaymentHistory.tsx and add the following code:
 
@@ -222,7 +222,7 @@ The user's address is obtained from the Recoil state using the useRecoilValue ho
 
 The payment amount and currency are rendered, and the payment date is formatted using the formatDate function.
 
-## 7. Update Navigation:
+## 7. Update Navigation
 
 The menu will now be updated to include links to the payment and payment history pages. Replace the present code in the NavBar.tsx file located in the src/components directory with the following:
 
@@ -260,7 +260,7 @@ const NavBar = () => {
 export default NavBar;
 ```
 
-## 8. Create the PaymentForm Component:
+## 8. Create the Paymentform Component
 
 Let's now build a component that will render a money transaction request form. The user can enter the desired payment amount using this component, which will accept the item and price as props.
 
@@ -338,7 +338,7 @@ The item name, price, and an input field for the user to enter the payment amoun
 
 Prior to submitting the form, we verify that a valid amount was input. If so, we create a payment request object and send it as a prop to the requestPayment function.
 
-## 9. Create the app component:
+## 9. Create the App Component
 
 Let's design the primary app component, which will render the PaymentForm component and control the payment process last.In the src directory, make a new file called App.tsx and add the following code:
 
@@ -370,7 +370,7 @@ export default function App() {
         .send({ from: account})
 ```
 
-## 10. Install the Payment Gateway on the User Interface: 
+## 10. Install the Payment Gateway on the User Interface
 
 We can incorporate the payment gateway into our user interface now that our smart contract has been distributed to the Celo network and our API server is operational. In this stage, we'll utilize React to create a straightforward user interface that enables customers to pay with the Celo stablecoin.
 
@@ -451,7 +451,7 @@ Then, in your project directory, use the following command to launch the develop
 
 `npm start`
 
-## 11. Create the payment component:
+## 11. Create the Payment Component
 
 Let's develop the Payment component now that the required helper functions have been built. Users will be able to enter the payment amount and start the payment process using this component.
 
@@ -543,7 +543,7 @@ const Payment: React.FC<PaymentProps> = ({ account, contract }) => {
 export default Payment;
 ```
 
-## 12. Implementing the Payment Confirmation Page:
+## 12. Implementing the Payment Confirmation Page
 
 The user must be directed to a confirmation page where they can view the transaction information after the payment has been handled properly. We will put the payment confirmation page into place in this step.
 
@@ -574,7 +574,7 @@ export default PaymentConfirmation;
 
 The useRouter hook from Next.js is used in this file to retrieve the query parameters from the URL. From the query parameters, we take the amount, currency, recipient address, and transaction hash, and we render these on the page.
 
-## 13. Testing the payment gateway:
+## 13. Testing the Payment Gateway:
 
 Let's test out our Celo payment gateway now that we have integrated all the relevant parts. You may launch the program by typing npm run dev. To view the application's home page, open your browser and navigate to http://localhost:3000.
 
@@ -584,7 +584,7 @@ In the Celo Wallet app, confirm the transaction, then wait for it to be executed
 
 Congratulations! Utilizing React, TypeScript, and the Celo payment gateway, you are done.
 
-## Conclusion: 
+## Conclusion 
 
 In this tutorial, we learned how to use React, TypeScript, and the Celo SDK to create a Celo payment gateway. The first step was to create a new Next.js project and add the required dependencies. Then, we developed a form that enables users to enter the recipient's address, the payment's amount, and its currency.
 
