@@ -1,5 +1,25 @@
 # Creating a Celo Payment Gateway
 
+## Table of Contents
+- [Creating a Celo Payment Gateway](#creating-a-celo-payment-gateway)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Requirements](#requirements)
+  - [1. Create a Celo Node](#1-create-a-celo-node)
+  - [2. Create a Smart Contract](#2-create-a-smart-contract)
+  - [3. Deploy the Smart Contract](#3-deploy-the-smart-contract)
+  - [4. Integrating the Celo Sdk](#4-integrating-the-celo-sdk)
+  - [5. Building the User Interface](#5-building-the-user-interface)
+  - [6. Build a Page That Shows the Logged-in Merchant’s Payment History](#6-build-a-page-that-shows-the-logged-in-merchants-payment-history)
+  - [7. Update Navigation](#7-update-navigation)
+  - [8. Create the Paymentform Component](#8-create-the-paymentform-component)
+  - [9. Create the App Component](#9-create-the-app-component)
+  - [10. Install the Payment Gateway on the User Interface](#10-install-the-payment-gateway-on-the-user-interface)
+  - [11. Create the Payment Component](#11-create-the-payment-component)
+  - [12. Implementing the Payment Confirmation Page](#12-implementing-the-payment-confirmation-page)
+  - [13. Testing the Payment Gateway:](#13-testing-the-payment-gateway)
+  - [Conclusion](#conclusion)
+
 ## Introduction
 
 We will create a Celo payment gateway using React, TypeScript, and the Celo SDK in this tutorial. Merchants will be able to take payments in Celo Stablecoins through the payment gateway, which will provide a secure and transparent payment mechanism. The Celo ContractKit library will be used to communicate with the Celo blockchain, and the React framework will be used to create the user interface.
