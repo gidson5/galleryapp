@@ -74,21 +74,48 @@ contract PaymentGateway {
 
     address public owner;
     mapping(address => uint256) public balances;
+    uint256 public totalBalance;
+
+    event FundsAdded(address indexed account, uint256 amount);
+    event FundsWithdrawn(address indexed account, uint256 amount);
 
     constructor() {
         owner = msg.sender;
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the contract owner can call this function");
+        _;
+    }
+
     function pay() public payable {
         balances[msg.sender] += msg.value;
+        totalBalance += msg.value;
+        emit FundsAdded(msg.sender, msg.value);
     }
 
     function withdraw(uint256 amount) public {
         require(balances[msg.sender] >= amount, "Insufficient balance");
         balances[msg.sender] -= amount;
+        totalBalance -= amount;
         payable(msg.sender).sendValue(amount);
+        emit FundsWithdrawn(msg.sender, amount);
+    }
+    
+    function getBalance(address account) public view returns (uint256) {
+        return balances[account];
+    }
+
+    function getTotalBalance() public view returns (uint256) {
+        return totalBalance;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0), "Invalid address");
+        owner = newOwner;
     }
 }
+
 ```
 
 The `pay()` feature of this smart contract updates the user's balance on the Celo blockchain and takes payments in Celo Stablecoins. Additionally, it offers a `withdraw()` feature that enables customers to get their remaining amounts.
